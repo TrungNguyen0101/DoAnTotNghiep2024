@@ -1,5 +1,5 @@
-const sequelize = require("../models/index.js");
-
+const path = require("path");
+const sequelize = require(path.resolve(__dirname, "../models/index.js"));
 const initModel = require("../models/init-models");
 const { succesCode, errorCode, failCode } = require("../responses/response");
 const models = initModel(sequelize);
