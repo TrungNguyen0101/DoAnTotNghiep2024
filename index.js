@@ -10,6 +10,8 @@ const {
 const bodyParser = require("body-parser");
 require("dotenv").config();
 const app = express();
+const port = process.env.PORT || 4000;
+console.log("port:", port);
 
 // using exception middleware
 app.use((err, req, res, next) => {
@@ -35,6 +37,6 @@ app.use("/", (req, res, next) => {
 app.use("/api/v1", routes);
 
 // start app
-app.listen(4000, () => {
-  console.log("Server run 5000");
+app.listen(port, () => {
+  console.log("Server run ", port);
 });
