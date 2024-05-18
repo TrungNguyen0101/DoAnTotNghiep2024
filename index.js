@@ -7,7 +7,7 @@ const {
   handleExceptionMiddleware,
   authMiddleware,
 } = require("./src/middlewares/middleware.js");
-const bodyParser = require('body-parser');
+const bodyParser = require("body-parser");
 require("dotenv").config();
 const app = express();
 
@@ -16,7 +16,6 @@ app.use((err, req, res, next) => {
   console.log("=================> lỗi rồi !!!");
   res.status(500).send(err);
 });
-
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -36,6 +35,6 @@ app.use("/", (req, res, next) => {
 app.use("/api/v1", routes);
 
 // start app
-app.listen(5000, () => {
+app.listen(4000, () => {
   console.log("Server run 5000");
 });
