@@ -1,4 +1,4 @@
-const sequelize = require("../models/index");
+const sequelize = require("../models/index.js");
 
 const initModel = require("../models/init-models");
 const { succesCode, errorCode, failCode } = require("../responses/response");
@@ -48,7 +48,6 @@ const login = async (req, res) => {
 };
 
 const register = async (req, res) => {
-
   try {
     const {
       email,
@@ -63,19 +62,23 @@ const register = async (req, res) => {
       tutor_profile: { description, stripe_account_id },
     } = req.body;
 
-    const file_cv = req.files['file_cv'] ? req.files['file_cv'][0].path : "";
-    const avatar_url = req.files['avatar_url'] ? req.files['avatar_url'][0].path : "";
+    const file_cv = req.files["file_cv"] ? req.files["file_cv"][0].path : "";
+    const avatar_url = req.files["avatar_url"]
+      ? req.files["avatar_url"][0].path
+      : "";
 
-
-    console.log(file_cv,avatar_url);
+    console.log(file_cv, avatar_url);
 
     var check = await models.users.findOne({
-      where:{
-        email : email
-      }
-    })
-    if(check){
-      return failCode(res, 'Email đã tồn tại. Vui lòng đăng nhập hoặc tạo tài khoản mới');
+      where: {
+        email: email,
+      },
+    });
+    if (check) {
+      return failCode(
+        res,
+        "Email đã tồn tại. Vui lòng đăng nhập hoặc tạo tài khoản mới"
+      );
     }
 
     let user = await models.users.create({
@@ -90,10 +93,9 @@ const register = async (req, res) => {
       role_id,
       type,
       password,
-      file_cv
+      file_cv,
     });
 
-    
     // tạo luôn profile
     // tutor
     if (type == "0") {
@@ -109,7 +111,7 @@ const register = async (req, res) => {
       });
 
       user.tutor_profile = tutorProfile;
-    } else if(type=="1") {
+    } else if (type == "1") {
       let studentProfile = await models.student_profile.create({
         student_profile_id: uuidv4(),
         student_id: user.dataValues.user_id,

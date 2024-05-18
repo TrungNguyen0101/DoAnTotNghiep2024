@@ -1,4 +1,4 @@
-const sequelize = require("../models/index");
+const sequelize = require("../models/index.js");
 const initModel = require("../models/init-models");
 const tutor_available_date = require("../models/tutor_available_date");
 const { succesCode, errorCode, failCode } = require("../responses/response");

@@ -1,4 +1,4 @@
-const sequelize = require("../models/index");
+const sequelize = require("../models/index.js");
 const initModel = require("../models/init-models");
 const { succesCode, failCode } = require("../responses/response");
 const models = initModel(sequelize);
