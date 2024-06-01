@@ -20,7 +20,7 @@ const getUserInfo = async (req, res) => {
         include: [
           // "tutor_certifications",
           "tutor_educations",
-          "tutor_experiences",
+          // "tutor_experiences",
         ],
       },
       // {
@@ -30,8 +30,6 @@ const getUserInfo = async (req, res) => {
     ],
   });
 
-  console.log(entity);
-
   var student_profile = await models.student_profile.findOne({
     where: {
       student_id: id,
@@ -40,12 +38,12 @@ const getUserInfo = async (req, res) => {
       {
         model: models.student_education,
         as: "student_educations",
-        include: [
-          {
-            model: models.school,
-            as: "schools",
-          },
-        ],
+        // include: [
+        //   {
+        //     model: models.school,
+        //     as: "schools",
+        //   },
+        // ],
       },
     ],
   });
@@ -64,7 +62,6 @@ const updateUserInfo = async (req, res) => {
       user_id: id,
     },
   });
-  console.log(req.body);
   entity.update(req.body);
 
   return succesCode(res, entity, "Success");

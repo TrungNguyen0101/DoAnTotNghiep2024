@@ -35,8 +35,12 @@ const findTurtolBySubject = async (req, res) => {
 };
 const create = async (req, res) => {
   let body = req.body;
+  const image_url = req.files["image_url"]
+    ? req.files["image_url"][0].path
+    : "";
   let entity = await models.category.create({
     category_id: uuidv4(),
+    image_url,
     ...body,
   });
 
@@ -46,12 +50,15 @@ const create = async (req, res) => {
 const update = async (req, res) => {
   let { id } = req.params;
   let body = req.body;
+  const image_url = req.files["image_url"]
+    ? req.files["image_url"][0].path
+    : "";
   let model = await models.category.findByPk(id);
   if (!model) {
     return failCode(res, "model is not exists");
   }
 
-  model.update(body);
+  model.update({ image_url, ...body });
   await model.save();
 
   model.reload();

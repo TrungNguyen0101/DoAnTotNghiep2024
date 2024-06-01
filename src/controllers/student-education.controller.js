@@ -30,6 +30,7 @@ const update = async (req, res) => {
   let { id } = req.params;
   let body = req.body;
   let model = await models.student_education.findByPk(id);
+  console.log("update ~ model:", model);
   if (!model) {
     return failCode(res, "model is not exists");
   }

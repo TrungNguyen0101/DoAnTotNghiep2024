@@ -3,16 +3,15 @@ const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const multer = require("multer");
 
 cloudinary.config({
-  cloud_name: "dwfjwrh8a",
-  api_key: "916367626457865",
-  api_secret: "MYTGVsP0Hkswzq9KXUn_Wpnbm14",
+  cloud_name: "dsrvia1wu",
+  api_key: "597996935416925",
+  api_secret: "M6qiRhiWaiDgPGWvTX9-9gT6UrQ",
 });
-
 const storage = new CloudinaryStorage({
   cloudinary,
   allowedFormats: [],
   params: {
-    folder: "giasu",
+    folder: "nguyenGMO",
     resource_type: "auto",
   },
 });

@@ -9,12 +9,7 @@ const moment = require("moment");
 
 const findAll = async (req, res) => {
   let entities = await models.tutor_profile.findAll({
-    include: [
-      "tutor_educations",
-      // "tutor_certifications",
-      "tutor_experiences",
-      "user",
-    ],
+    include: ["tutor_educations", "user"],
   });
   return succesCode(
     res,
@@ -33,14 +28,13 @@ const findById = async (req, res) => {
       {
         model: models.tutor_education,
         as: "tutor_educations",
-        include: "schools",
+        // include: "schools",
       },
       // { model: models.tutor_certification, as: "tutor_certifications" },
-      { model: models.tutor_experience, as: "tutor_experiences" },
+      // { model: models.tutor_experience, as: "tutor_experiences" },
       { model: models.users, as: "user" },
     ],
   });
-  console.log(entity);
 
   return succesCode(res, entity, "Success");
 };
@@ -72,7 +66,6 @@ const update = async (req, res) => {
 
 const deleteById = async (req, res) => {
   let { id } = req.params;
-  console.log("deleteById ~ id:", id);
 
   // let result0 = await models.booked_session.getAll({
   //   where: {
@@ -107,7 +100,6 @@ const deleteById = async (req, res) => {
           course_program_id: courseProgram.course_program_id,
         },
       });
-      console.log("deleteById ~ courseProgramPhases:", courseProgramPhases);
 
       // Xóa course_program sau khi đã xóa các hàng liên quan trong course_program_phase
       let courseProgramResult = await models.course_program.destroy({
@@ -115,7 +107,6 @@ const deleteById = async (req, res) => {
           course_program_id: courseProgram.course_program_id,
         },
       });
-      console.log("deleteById ~ courseProgramResult:", courseProgramResult);
     }
 
     let result1 = await models.course.destroy({
@@ -135,7 +126,6 @@ const deleteById = async (req, res) => {
       tutor_profile_id: id,
     },
   });
-  console.log("deleteById ~ result:", result);
 
   await user.save();
 
@@ -215,19 +205,19 @@ const updateTutorExperience = async (req, res) => {
   let { id } = req.params;
   let body = req.body;
 
-  await models.tutor_experience.destroy({
-    where: {
-      tutor_profile_id: id,
-    },
-  });
+  // await models.tutor_experience.destroy({
+  //   where: {
+  //     tutor_profile_id: id,
+  //   },
+  // });
 
-  let entity = await models.tutor_experience.bulkCreate(
-    body.map((x) => {
-      x.tutor_experience_id = uuidv4();
-      x.tutor_profile_id = id;
-      return x;
-    })
-  );
+  // let entity = await models.tutor_experience.bulkCreate(
+  //   body.map((x) => {
+  //     x.tutor_experience_id = uuidv4();
+  //     x.tutor_profile_id = id;
+  //     return x;
+  //   })
+  // );
 
   return succesCode(res, entity);
 };
@@ -245,7 +235,7 @@ const getTutorByUserId = async (req, res) => {
         include: [
           // "tutor_certifications",
           "tutor_educations",
-          "tutor_experiences",
+          // "tutor_experiences",
         ],
       },
     ],

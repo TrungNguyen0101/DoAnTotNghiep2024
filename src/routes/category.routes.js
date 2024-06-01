@@ -5,8 +5,9 @@ const {
   create,
   update,
   deleteById,
-  findTurtolBySubject
+  findTurtolBySubject,
 } = require("../controllers/category.controller");
+const uploadCloud = require("../middlewares/uploader");
 const categoryRoutes = express.Router();
 
 /**
@@ -14,8 +15,16 @@ const categoryRoutes = express.Router();
  */
 categoryRoutes.get("/", findAll);
 categoryRoutes.get("/:id", findById);
-categoryRoutes.post("/", create);
-categoryRoutes.put("/:id", update);
+categoryRoutes.post(
+  "/",
+  uploadCloud.fields([{ name: "image_url", maxCount: 1 }]),
+  create
+);
+categoryRoutes.put(
+  "/:id",
+  uploadCloud.fields([{ name: "image_url", maxCount: 1 }]),
+  update
+);
 categoryRoutes.delete("/:id", deleteById);
-categoryRoutes.post("/searchByCategryId/:id", findTurtolBySubject)
+categoryRoutes.post("/searchByCategryId/:id", findTurtolBySubject);
 module.exports = categoryRoutes;

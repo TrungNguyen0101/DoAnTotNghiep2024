@@ -14,6 +14,13 @@ const config = {
   vnp_Url: "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html",
   vnp_ReturnUrl: "http://localhost:3000/payment-result",
 };
+var courseManage;
+var studentManage;
+
+function getDataPayment(cart, student) {
+  courseManage = cart;
+  studentManage = student;
+}
 
 function pad2(n) {
   // always returns a string
@@ -57,15 +64,19 @@ const getPaymentUrl = async (req, res) => {
 
   // tạo booked_session
   var course = await models.course.findByPk(body.course_id);
-  var booked_session = await models.booked_session.create({
-    booked_session_id: uuidv4(),
-    student_id: body.student_id,
-    tutor_id: body.tutor_id,
-    course_id: course.dataValues.course_id,
-    price: course.dataValues.price,
-    checkout_session_id: null,
-    status: "PENDING",
-  });
+  getDataPayment(course, req.body.student_id);
+  if (course) {
+    var booked_session = await models.booked_session.create({
+      booked_session_id: uuidv4(),
+      student_id: body.student_id,
+      tutor_id: body.tutor_id,
+      course_id: course?.dataValues?.course_id,
+      price: course.dataValues.price,
+      // checkout_session_id: null,
+      data: course,
+      status: "PENDING",
+    });
+  }
 
   // var tutoring_contract = await models.tutoring_contract.create({
   //   tutoring_contract_id: uuidv4(),
@@ -100,7 +111,7 @@ const getPaymentUrl = async (req, res) => {
     req.socket.remoteAddress ||
     req.connection.socket.remoteAddress;
 
-  var orderId = booked_session.dataValues.booked_session_id;
+  var orderId = booked_session?.dataValues?.booked_session_id;
   var amount = parseInt(course.dataValues.price);
   var bankCode = "";
 
@@ -140,8 +151,8 @@ const getPaymentUrl = async (req, res) => {
 
 const checkSumPayment = async (req, res) => {
   let vnp_Params = req.query;
+  console.log("checkSumPayment ~ vnp_Params:", vnp_Params);
 
-  console.log(vnp_Params);
   let secureHash = vnp_Params["vnp_SecureHash"];
 
   delete vnp_Params["vnp_SecureHash"];
@@ -156,21 +167,37 @@ const checkSumPayment = async (req, res) => {
   let crypto = require("crypto");
   let hmac = crypto.createHmac("sha512", secretKey);
   let signed = hmac.update(new Buffer(signData, "utf8")).digest("hex");
+  // let signed = hmac.update(new Buffer(signData, "utf-8")).digest("hex");
 
   if (secureHash === signed) {
-    //Kiem tra xem du lieu trong db co hop le hay khong va thong bao ket qua
-    const booked_session_id = vnp_Params["vnp_TxnRef"];
-    var booked = await models.booked_session.findByPk(booked_session_id);
-    booked.update({
-      booked_session_id,
-      status: "DONE",
-    });
-
-    await booked.save();
-
-    return succesCode(res, { code: vnp_Params["vnp_ResponseCode"] });
+    const rspCode = vnp_Params["vnp_ResponseCode"];
+    if (rspCode === "00") {
+      const booked_session_id = vnp_Params["vnp_TxnRef"];
+      var booked = await models.booked_session.findByPk(booked_session_id);
+      booked.update({
+        booked_session_id,
+        status: "DONE",
+      });
+      await booked.save();
+      var course_payment = await models.payment_transaction.create({
+        payment_transaction_id: vnp_Params["vnp_TxnRef"],
+        amount: vnp_Params["vnp_Amount"] / 100,
+        student_id: studentManage,
+        course_payment: courseManage,
+        time: vnp_Params["vnp_PayDate"],
+      });
+    }
+    if (vnp_Params["vnp_ResponseCode"]) {
+      return succesCode(res, {
+        code: vnp_Params["vnp_ResponseCode"],
+        course: { courseManage },
+      });
+    }
   } else {
-    return succesCode(res, { code: "97" });
+    return succesCode(res, {
+      code: vnp_Params["vnp_ResponseCode"],
+      course: { courseManage },
+    });
   }
 };
 

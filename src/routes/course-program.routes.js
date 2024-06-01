@@ -6,10 +6,12 @@ const {
   createPhase,
   updatePhase,
   deletePhaseById,
+  urlVideo,
 } = require("../controllers/course-program.controller");
 const courseProgramRoutes = express.Router();
 
 courseProgramRoutes.post("/", create);
+courseProgramRoutes.get("/video", urlVideo);
 courseProgramRoutes.put("/:id", update);
 courseProgramRoutes.delete("/:id", deleteById);
 

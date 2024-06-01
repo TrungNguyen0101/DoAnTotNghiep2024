@@ -84,6 +84,14 @@ const deletePhaseById = async (req, res) => {
   return result > 0 ? succesCode(res, true) : failCode(res, "Thất bại");
 };
 
+const urlVideo = async (req, res) => {
+  // return "http://res.cloudinary.com/dsrvia1wu/video/upload/";
+  // return succesCode("http://res.cloudinary.com/dsrvia1wu/video/upload/", true);
+  return res.status(200).json({
+    data: "http://res.cloudinary.com/dsrvia1wu/video/upload/",
+  });
+};
+
 module.exports = {
   create,
   update,
@@ -91,4 +99,5 @@ module.exports = {
   createPhase,
   updatePhase,
   deletePhaseById,
+  urlVideo,
 };

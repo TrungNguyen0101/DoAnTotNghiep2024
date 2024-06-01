@@ -40,7 +40,7 @@ const login = async (req, res) => {
       type: "Bearer",
       access_token: getToken(user.dataValues),
       role_id: user.dataValues.role_id,
-      avatar_url: user.dataValues.avatar_url,
+      avatar_url: user?.dataValues?.avatar_url,
     });
   } catch (err) {
     errorCode(res, err);
@@ -55,25 +55,27 @@ const register = async (req, res) => {
       first_name,
       gender,
       phone_number,
-      google_id,
+      // google_id,
       role_id,
       type,
       password,
-      tutor_profile: { description, stripe_account_id },
+      // tutor_profile: { description, stripe_account_id },
+      tutor_profile: { description },
     } = req.body;
 
-    const file_cv = req.files["file_cv"] ? req.files["file_cv"][0].path : "";
-    const avatar_url = req.files["avatar_url"]
-      ? req.files["avatar_url"][0].path
-      : "";
-
-    console.log(file_cv, avatar_url);
+    // const file_cv = req.files["file_cv"] ? req.files["file_cv"][0].path : "";
+    const avatar_url =
+      req.files && req.files["avatar_url"]
+        ? req.files["avatar_url"][0].path
+        : "";
+    // console.log(file_cv, avatar_url);
 
     var check = await models.users.findOne({
       where: {
         email: email,
       },
     });
+    console.log("register ~ check:", check);
     if (check) {
       return failCode(
         res,
@@ -89,11 +91,11 @@ const register = async (req, res) => {
       gender,
       avatar_url,
       phone_number,
-      google_id,
+      // google_id,
       role_id,
       type,
       password,
-      file_cv,
+      // file_cv,
     });
 
     // tạo luôn profile
@@ -102,9 +104,9 @@ const register = async (req, res) => {
       let tutorProfile = await models.tutor_profile.create({
         tutor_profile_id: uuidv4(),
         description,
-        stripe_account_id,
+        // stripe_account_id,
         status: "1",
-        is_stripe_verified: "1",
+        // is_stripe_verified: "1",
         balance: 0,
         has_charge_first_time: false,
         user_id: user.dataValues.user_id,

@@ -7,14 +7,14 @@ const _course_program_phase = require("./course_program_phase");
 const _payment_transaction = require("./payment_transaction");
 const _role = require("./role");
 // const _schedule = require("./schedule");
-const _school = require("./school");
+// const _school = require("./school");
 const _student_education = require("./student_education");
 const _student_profile = require("./student_profile");
 // const _token = require("./token");
 // const _tutor_available_date = require("./tutor_available_date");
 // const _tutor_certification = require("./tutor_certification");
 const _tutor_education = require("./tutor_education");
-const _tutor_experience = require("./tutor_experience");
+// const _tutor_experience = require("./tutor_experience");
 const _tutor_profile = require("./tutor_profile");
 // const _tutoring_contract = require("./tutoring_contract");
 // const _tutoring_feedback = require("./tutoring_feedback");
@@ -22,6 +22,7 @@ const _tutor_profile = require("./tutor_profile");
 const _turtor_category = require("./turtor_category");
 const _users = require("./users");
 const _comment = require("./comment");
+const _message = require("./message");
 // const _rate = require("./rate");
 function initModels(sequelize) {
   const booked_session = _booked_session(sequelize, DataTypes);
@@ -32,14 +33,14 @@ function initModels(sequelize) {
   const payment_transaction = _payment_transaction(sequelize, DataTypes);
   const role = _role(sequelize, DataTypes);
   // const schedule = _schedule(sequelize, DataTypes);
-  const school = _school(sequelize, DataTypes);
+  // const school = _school(sequelize, DataTypes);
   const student_education = _student_education(sequelize, DataTypes);
   const student_profile = _student_profile(sequelize, DataTypes);
   // const token = _token(sequelize, DataTypes);
   // const tutor_available_date = _tutor_available_date(sequelize, DataTypes);
   // const tutor_certification = _tutor_certification(sequelize, DataTypes);
   const tutor_education = _tutor_education(sequelize, DataTypes);
-  const tutor_experience = _tutor_experience(sequelize, DataTypes);
+  // const tutor_experience = _tutor_experience(sequelize, DataTypes);
   const tutor_profile = _tutor_profile(sequelize, DataTypes);
   // const tutoring_contract = _tutoring_contract(sequelize, DataTypes);
   // const tutoring_feedback = _tutoring_feedback(sequelize, DataTypes);
@@ -49,6 +50,7 @@ function initModels(sequelize) {
   // );
   const turtor_category = _turtor_category(sequelize, DataTypes);
   const users = _users(sequelize, DataTypes);
+  const message = _message(sequelize, DataTypes);
   const comments = _comment(sequelize, DataTypes);
   // const rate = _rate(sequelize, DataTypes);
   // tutoring_contract.belongsTo(booked_session, {
@@ -87,17 +89,17 @@ function initModels(sequelize) {
   users.belongsTo(role, { as: "role", foreignKey: "role_id" });
   role.hasMany(users, { as: "users", foreignKey: "role_id" });
 
-  student_education.hasMany(school, { as: "schools", foreignKey: "school_id" });
-  school.belongsTo(student_education, {
-    as: "student_education",
-    foreignKey: "school_id",
-  });
+  // student_education.hasMany(school, { as: "schools", foreignKey: "school_id" });
+  // school.belongsTo(student_education, {
+  //   as: "student_education",
+  //   foreignKey: "school_id",
+  // });
 
-  tutor_education.hasMany(school, { as: "schools", foreignKey: "school_id" });
-  school.belongsTo(tutor_education, {
-    as: "tutor_education",
-    foreignKey: "school_id",
-  });
+  // tutor_education.hasMany(school, { as: "schools", foreignKey: "school_id" });
+  // school.belongsTo(tutor_education, {
+  //   as: "tutor_education",
+  //   foreignKey: "school_id",
+  // });
 
   student_education.belongsTo(student_profile, {
     as: "student_profile",
@@ -142,14 +144,14 @@ function initModels(sequelize) {
     as: "tutor_educations",
     foreignKey: "tutor_profile_id",
   });
-  tutor_experience.belongsTo(tutor_profile, {
-    as: "tutor_profile",
-    foreignKey: "tutor_profile_id",
-  });
-  tutor_profile.hasMany(tutor_experience, {
-    as: "tutor_experiences",
-    foreignKey: "tutor_profile_id",
-  });
+  // tutor_experience.belongsTo(tutor_profile, {
+  //   as: "tutor_profile",
+  //   foreignKey: "tutor_profile_id",
+  // });
+  // tutor_profile.hasMany(tutor_experience, {
+  //   as: "tutor_experiences",
+  //   foreignKey: "tutor_profile_id",
+  // });
   booked_session.belongsTo(users, { as: "student", foreignKey: "student_id" });
   users.hasMany(booked_session, {
     as: "booked_sessions",
@@ -160,11 +162,11 @@ function initModels(sequelize) {
     as: "tutor_booked_sessions",
     foreignKey: "tutor_id",
   });
-  payment_transaction.belongsTo(users, { as: "tutor", foreignKey: "tutor_id" });
-  users.hasMany(payment_transaction, {
-    as: "payment_transactions",
-    foreignKey: "tutor_id",
-  });
+  // payment_transaction.belongsTo(users, { as: "tutor", foreignKey: "tutor_id" });
+  // users.hasMany(payment_transaction, {
+  //   as: "payment_transactions",
+  //   foreignKey: "tutor_id",
+  // });
   payment_transaction.belongsTo(users, {
     as: "student",
     foreignKey: "student_id",
@@ -223,6 +225,11 @@ function initModels(sequelize) {
   category.hasMany(turtor_category, { foreignKey: "category_id" });
 
   tutor_profile.hasMany(turtor_category, { foreignKey: "tutor_p_id" });
+
+  users.hasMany(message, { foreignKey: "sender_id" });
+  users.hasMany(message, { foreignKey: "receiver_id" });
+  message.belongsTo(users, { foreignKey: "sender_id" });
+  message.belongsTo(users, { foreignKey: "receiver_id" });
   return {
     booked_session,
     category,
@@ -232,14 +239,14 @@ function initModels(sequelize) {
     payment_transaction,
     role,
     // schedule,
-    school,
+    // school,
     student_education,
     student_profile,
     // token,
     // tutor_available_date,
     // tutor_certification,
     tutor_education,
-    tutor_experience,
+    // tutor_experience,
     tutor_profile,
     // tutoring_contract,
     // tutoring_feedback,
@@ -247,6 +254,7 @@ function initModels(sequelize) {
     users,
     comments,
     turtor_category,
+    message,
     // rate,
   };
 }

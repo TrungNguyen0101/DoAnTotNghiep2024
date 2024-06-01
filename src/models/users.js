@@ -33,17 +33,17 @@ class users extends Sequelize.Model {
           allowNull: true,
         },
         avatar_url: {
-          type: DataTypes.STRING(50),
+          type: DataTypes.STRING(512),
           allowNull: true,
         },
         phone_number: {
           type: DataTypes.STRING(50),
           allowNull: true,
         },
-        google_id: {
-          type: DataTypes.STRING(50),
-          allowNull: true,
-        },
+        // google_id: {
+        //   type: DataTypes.STRING(50),
+        //   allowNull: true,
+        // },
         role_id: {
           type: DataTypes.STRING(50),
           allowNull: true,
@@ -59,7 +59,7 @@ class users extends Sequelize.Model {
         // file_cv: {
         //   type: DataTypes.STRING(255),
         //   allowNull: true,
-        // }
+        // },
         // address: {
         //   type: DataTypes.TEXT,
         //   allowNull: true,

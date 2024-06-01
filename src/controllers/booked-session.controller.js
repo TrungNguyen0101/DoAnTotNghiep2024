@@ -56,4 +56,68 @@ const deleteById = async (req, res) => {
   return result > 0 ? succesCode(res, true) : failCode(res, "Thất bại");
 };
 
-module.exports = { findAll, findById, create, update, deleteById };
+const findByUserIdAndCourseId = async (req, res) => {
+  let { user_id, course_id } = req.query;
+  try {
+    let sessions = await models.booked_session.findAll({
+      where: {
+        student_id: user_id,
+        course_id: course_id,
+        status: "DONE",
+      },
+      include: ["tutor", "student", "course"],
+    });
+    if (sessions) {
+      return succesCode(res, sessions);
+    } else {
+      return errorCode(res, "Không tìm thấy");
+    }
+  } catch (error) {
+    return errorCode(res, error.message);
+  }
+};
+const findByUserIdDone = async (req, res) => {
+  let { user_id } = req.query;
+  try {
+    let sessions = await models.booked_session.findAll({
+      where: {
+        student_id: user_id,
+        status: "DONE",
+      },
+      include: ["tutor", "student", "course"],
+    });
+    if (sessions) {
+      return succesCode(res, sessions);
+    } else {
+      return errorCode(res, "Không tìm thấy");
+    }
+  } catch (error) {
+    return errorCode(res, error.message);
+  }
+};
+
+const findByCourseIdDone = async (req, res) => {
+  let { course_id } = req.query;
+  try {
+    let sessionCount = await models.booked_session.count({
+      where: {
+        course_id: course_id,
+        status: "DONE",
+      },
+    });
+    return succesCode(res, { count: sessionCount });
+  } catch (error) {
+    return errorCode(res, error.message);
+  }
+};
+
+module.exports = {
+  findAll,
+  findById,
+  create,
+  update,
+  deleteById,
+  findByUserIdAndCourseId,
+  findByCourseIdDone,
+  findByUserIdDone,
+};

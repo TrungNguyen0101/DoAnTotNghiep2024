@@ -11,7 +11,7 @@ const findAll = async (req, res) => {
       {
         model: models.student_education,
         as: "student_educations",
-        include: ["schools"],
+        // include: ["schools"],
       },
       {
         model: models.users,
@@ -33,7 +33,7 @@ const findById = async (req, res) => {
       {
         model: models.student_education,
         as: "student_educations",
-        include: ["schools"],
+        // include: ["schools"],
       },
       {
         model: models.users,
@@ -58,7 +58,7 @@ const create = async (req, res) => {
 const update = async (req, res) => {
   let { id } = req.params;
   let body = req.body;
-  let model = await models.student_profile.findByPk(id);
+  let model = await models.student_education.findByPk(id);
   if (!model) {
     return failCode(res, "model is not exists");
   }
@@ -72,9 +72,10 @@ const update = async (req, res) => {
 
 const deleteById = async (req, res) => {
   let { id } = req.params;
-  let result = await models.student_profile.destroy({
+  console.log("deleteById ~ id:", id);
+  let result = await models.student_education.destroy({
     where: {
-      student_profile_id: id,
+      student_education_id: id,
     },
   });
 
@@ -106,13 +107,14 @@ const updateStudentEducations = async (req, res) => {
     },
   });
 
-  let entity = await models.student_education.bulkCreate(
-    body.map((x) => {
-      x.student_education_id = uuidv4();
-      x.student_profile_id = id;
-      return x;
-    })
-  );
+  let newRecord = {
+    ...body,
+    student_education_id: uuidv4(),
+    student_profile_id: id,
+  };
+
+  // Create the new student education record
+  let entity = await models.student_education.create(newRecord);
 
   return succesCode(res, entity);
 };

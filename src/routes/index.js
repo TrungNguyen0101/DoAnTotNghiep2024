@@ -17,6 +17,7 @@ const uploadRoutes = require("./upload.routes");
 const paymentRoutes = require("./payment.routes");
 const commentRoutes = require("./comment.routes");
 const rateRoutes = require("./rate.routes");
+const messageRoutes = require("./message.routes");
 const routes = express.Router();
 
 routes.use("/course", courseRoutes);
@@ -37,4 +38,5 @@ routes.use("/upload", uploadRoutes);
 routes.use("/payment", paymentRoutes);
 routes.use("/comment", commentRoutes);
 routes.use("/rate", rateRoutes);
+routes.use("/message", messageRoutes);
 module.exports = routes;

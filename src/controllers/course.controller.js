@@ -63,6 +63,22 @@ const findAllbyTutor = async (req, res) => {
   return succesCode(res, entities, "Lấy danh sách khóa học thành công!!!");
 };
 
+const findAllByCategory = async (req, res) => {
+  let { id } = req.params;
+  let entities = await models.course.findAll({
+    where: {
+      category_id: id,
+    },
+    include: [
+      {
+        model: models.category,
+        as: "category",
+      },
+    ],
+  });
+  return succesCode(res, entities, "Lấy danh sách khóa học thành công!!!");
+};
+
 const findById = async (req, res) => {
   let { id } = req.params;
   let entity = await models.course.findOne({
@@ -94,8 +110,12 @@ const findById = async (req, res) => {
 
 const create = async (req, res) => {
   let body = req.body;
+  const image_url = req.files["image_url"]
+    ? req.files["image_url"][0].path
+    : "";
   let entity = await models.course.create({
     course_id: uuidv4(),
+    image_url,
     ...body,
   });
 
@@ -105,12 +125,15 @@ const create = async (req, res) => {
 const update = async (req, res) => {
   let { id } = req.params;
   let body = req.body;
+  const image_url = req.files["image_url"]
+    ? req.files["image_url"][0].path
+    : "";
   let model = await models.course.findByPk(id);
   if (!model) {
     return failCode(res, "model is not exists");
   }
 
-  model.update(body);
+  model.update({ image_url, ...body });
   await model.save();
 
   model.reload();
@@ -169,4 +192,5 @@ module.exports = {
   deleteById,
   getListCourseHome,
   findAllbyTutor,
+  findAllByCategory,
 };

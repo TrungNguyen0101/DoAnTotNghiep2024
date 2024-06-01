@@ -28,10 +28,10 @@ class course extends Sequelize.Model {
           type: DataTypes.STRING(50),
           allowNull: true,
         },
-        number_of_phase_required: {
-          type: DataTypes.STRING(50),
-          allowNull: true,
-        },
+        // number_of_phase_required: {
+        //   type: DataTypes.STRING(50),
+        //   allowNull: true,
+        // },
         tutor_profile_id: {
           type: DataTypes.STRING(50),
           allowNull: true,
@@ -44,6 +44,10 @@ class course extends Sequelize.Model {
           type: DataTypes.STRING(50),
           allowNull: true,
         },
+        type_course: {
+          type: DataTypes.STRING(50),
+          allowNull: true,
+        },
         category_id: {
           type: DataTypes.STRING(50),
           allowNull: true,
@@ -52,18 +56,18 @@ class course extends Sequelize.Model {
             key: "category_id",
           },
         },
-        spend_time: {
-          type: DataTypes.STRING(50),
-          allowNull: true,
-        },
-        is_publish: {
-          type: DataTypes.STRING(50),
-          allowNull: true,
-        },
-        duration: {
-          type: DataTypes.STRING(50),
-          allowNull: true,
-        },
+        // spend_time: {
+        //   type: DataTypes.STRING(50),
+        //   allowNull: true,
+        // },
+        // is_publish: {
+        //   type: DataTypes.STRING(50),
+        //   allowNull: true,
+        // },
+        // duration: {
+        //   type: DataTypes.STRING(50),
+        //   allowNull: true,
+        // },
       },
       {
         sequelize,

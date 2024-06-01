@@ -8,14 +8,55 @@ const {
   authMiddleware,
 } = require("./src/middlewares/middleware.js");
 const bodyParser = require("body-parser");
+const { v4: uuidv4 } = require("uuid");
+
 require("dotenv").config();
-const app = express();
+var app = express();
 const port = process.env.PORT || 4000;
-console.log("port:", port);
+const http = require("http");
+const initModels = require("./src/models/init-models.js");
+const sequelize = require("./src/models/index.js");
+const models = initModels(sequelize);
+
+const server = http.createServer(app);
+const socketIo = require("socket.io")(server, {
+  cors: {
+    origin: "*",
+  },
+});
+
+const clients = {};
+
+socketIo.on("connection", (socket) => {
+  let userId;
+
+  socket.on("authenticate", (_userId) => {
+    userId = _userId;
+  });
+
+  socket.on("send-message", async (data) => {
+    const { receiverId, message } = data;
+
+    // Lưu tin nhắn vào cơ sở dữ liệu
+    await models.message.create({
+      message_id: uuidv4(),
+      sender_id: userId,
+      receiver_id: receiverId,
+      message,
+      timestamp: new Date(),
+    });
+
+    const socketId = clients[receiverId];
+    socketIo.emit("receive-message", { senderId: userId, message });
+  });
+
+  // socket.on("disconnect", () => {
+  //   delete clients[userId];
+  // });
+});
 
 // using exception middleware
 app.use((err, req, res, next) => {
-  console.log("=================> lỗi rồi !!!");
   res.status(500).send(err);
 });
 
@@ -37,6 +78,6 @@ app.use("/", (req, res, next) => {
 app.use("/api/v1", routes);
 
 // start app
-app.listen(port, () => {
+server.listen(port, () => {
   console.log("Server run ", port);
 });

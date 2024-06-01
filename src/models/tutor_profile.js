@@ -21,21 +21,21 @@ class tutor_profile extends Sequelize.Model {
           },
         },
         description: {
-          type: DataTypes.STRING(50),
+          type: DataTypes.STRING(1000),
           allowNull: true,
         },
         status: {
           type: DataTypes.STRING(50),
           allowNull: true,
         },
-        stripe_account_id: {
-          type: DataTypes.STRING(50),
-          allowNull: true,
-        },
-        is_stripe_verified: {
-          type: DataTypes.STRING(50),
-          allowNull: true,
-        },
+        // stripe_account_id: {
+        //   type: DataTypes.STRING(50),
+        //   allowNull: true,
+        // },
+        // is_stripe_verified: {
+        //   type: DataTypes.STRING(50),
+        //   allowNull: true,
+        // },
         balance: {
           type: DataTypes.STRING(50),
           allowNull: true,
