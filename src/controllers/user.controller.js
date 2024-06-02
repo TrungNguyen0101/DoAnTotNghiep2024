@@ -67,4 +67,9 @@ const updateUserInfo = async (req, res) => {
   return succesCode(res, entity, "Success");
 };
 
-module.exports = { getUserInfo, updateUserInfo };
+const findAllAccount = async (req, res) => {
+  let entities = await models.users.findAndCountAll();
+  return succesCode(res, entities, "Lấy danh sách khóa học thành công!!!");
+};
+
+module.exports = { getUserInfo, updateUserInfo, findAllAccount };

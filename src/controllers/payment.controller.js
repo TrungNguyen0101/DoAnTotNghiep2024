@@ -186,6 +186,18 @@ const checkSumPayment = async (req, res) => {
         course_payment: courseManage,
         time: vnp_Params["vnp_PayDate"],
       });
+
+      var TutorProfile = await models.tutor_profile.findByPk(
+        courseManage?.tutor_profile_id
+      );
+      if (TutorProfile) {
+        const updatedBalance =
+          parseFloat(TutorProfile.balance) +
+          parseFloat(vnp_Params["vnp_Amount"]) / 100;
+        await TutorProfile.update({ balance: updatedBalance });
+      } else {
+        console.log("Không tìm thấy hồ sơ giáo viên");
+      }
     }
     if (vnp_Params["vnp_ResponseCode"]) {
       return succesCode(res, {
@@ -201,4 +213,9 @@ const checkSumPayment = async (req, res) => {
   }
 };
 
-module.exports = { getPaymentUrl, checkSumPayment };
+const findAllPayment = async (req, res) => {
+  let entities = await models.payment_transaction.findAndCountAll();
+  return succesCode(res, entities, "Lấy danh sách khóa học thành công!!!");
+};
+
+module.exports = { getPaymentUrl, checkSumPayment, findAllPayment };

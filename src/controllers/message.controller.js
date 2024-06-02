@@ -10,7 +10,7 @@ const getMessageById = async (req, res) => {
     let { id } = req.params;
     let entities = await models.message.findAll({
       where: {
-        sender_id: id,
+        [Op.or]: [{ sender_id: id }, { receiver_id: id }],
       },
       attributes: [
         "sender_id",
