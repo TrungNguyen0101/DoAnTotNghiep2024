@@ -28,6 +28,16 @@ class tutor_profile extends Sequelize.Model {
           type: DataTypes.STRING(50),
           allowNull: true,
         },
+        approve: {
+          type: DataTypes.BOOLEAN,
+          allowNull: true,
+          defaultValue: false,
+        },
+        check_approve: {
+          type: DataTypes.BOOLEAN,
+          allowNull: true,
+          defaultValue: false,
+        },
         // stripe_account_id: {
         //   type: DataTypes.STRING(50),
         //   allowNull: true,

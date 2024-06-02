@@ -226,10 +226,23 @@ function initModels(sequelize) {
 
   tutor_profile.hasMany(turtor_category, { foreignKey: "tutor_p_id" });
 
-  users.hasMany(message, { foreignKey: "sender_id" });
-  users.hasMany(message, { foreignKey: "receiver_id" });
-  message.belongsTo(users, { foreignKey: "sender_id" });
-  message.belongsTo(users, { foreignKey: "receiver_id" });
+  users.hasMany(message, {
+    foreignKey: "sender_id",
+  });
+  users.hasMany(message, {
+    foreignKey: "receiver_id",
+  });
+  message.belongsTo(users, {
+    foreignKey: "receiver_id",
+    onDelete: "CASCADE", // Thực hiện xóa các tin nhắn liên quan khi người dùng được xóa
+    onUpdate: "CASCADE",
+  });
+  message.belongsTo(users, {
+    foreignKey: "receiver_id",
+    onDelete: "SET DEFAULT", // Đặt giá trị mặc định khi người dùng được xóa
+    onUpdate: "CASCADE",
+  });
+
   return {
     booked_session,
     category,
