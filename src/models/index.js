@@ -1,22 +1,34 @@
 const { Sequelize } = require("sequelize");
 
-const sequelize = new Sequelize(
-  "bdxb74rjmjvq09yffdnt",
-  "u0lnxnaaijmtcr7r",
-  "tD0ldvVvWsWC1kD0ZhTr",
-  {
-    port: 3306,
-    host: "bdxb74rjmjvq09yffdnt-mysql.services.clever-cloud.com",
-    password: "tD0ldvVvWsWC1kD0ZhTr",
-    dialect:
-      "mysql" /* one of 'mysql' | 'postgres' | 'sqlite' | 'mariadb' | 'mssql' | 'db2' | 'snowflake' | 'oracle' */,
-    define: {
-      timestamps: true,
-      createdAt: "created_at",
-      updatedAt: "updated_at",
-    },
-  }
-);
+// const sequelize = new Sequelize(
+//   "bdxb74rjmjvq09yffdnt",
+//   "u0lnxnaaijmtcr7r",
+//   "tD0ldvVvWsWC1kD0ZhTr",
+//   {
+//     port: 3306,
+//     host: "bdxb74rjmjvq09yffdnt-mysql.services.clever-cloud.com",
+//     password: "tD0ldvVvWsWC1kD0ZhTr",
+//     dialect:
+//       "mysql" /* one of 'mysql' | 'postgres' | 'sqlite' | 'mariadb' | 'mssql' | 'db2' | 'snowflake' | 'oracle' */,
+//     define: {
+//       timestamps: true,
+//       createdAt: "created_at",
+//       updatedAt: "updated_at",
+//     },
+//   }
+// );
+const sequelize = new Sequelize("doan", "root", "root", {
+  port: 3306,
+  host: "127.0.0.1",
+  password: "",
+  dialect:
+    "mysql" /* one of 'mysql' | 'postgres' | 'sqlite' | 'mariadb' | 'mssql' | 'db2' | 'snowflake' | 'oracle' */,
+  define: {
+    timestamps: true,
+    createdAt: "created_at",
+    updatedAt: "updated_at",
+  },
+});
 
 async function initializeDatabase() {
   try {

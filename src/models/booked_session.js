@@ -52,6 +52,14 @@ class booked_session extends Sequelize.Model {
           type: DataTypes.JSON,
           allowNull: true,
         },
+        time: {
+          type: DataTypes.STRING(50),
+          allowNull: true,
+        },
+        is_expiry: {
+          type: DataTypes.STRING(50),
+          allowNull: true,
+        },
       },
       {
         sequelize,

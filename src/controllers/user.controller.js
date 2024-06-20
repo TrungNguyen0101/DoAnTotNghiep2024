@@ -49,7 +49,7 @@ const getUserInfo = async (req, res) => {
   });
 
   var response = {
-    ...entity.dataValues,
+    ...entity?.dataValues,
     student_profile: student_profile,
   };
   return succesCode(res, response, "Success");

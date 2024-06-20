@@ -27,33 +27,44 @@ const socketIo = require("socket.io")(server, {
 
 const clients = {};
 
-// socketIo.on("connection", (socket) => {
-//   let userId;
+socketIo.on("connection", (socket) => {
+  let userId;
 
-//   socket.on("authenticate", (_userId) => {
-//     userId = _userId;
-//   });
+  socket.on("authenticate", (_userId) => {
+    userId = _userId;
+  });
 
-//   socket.on("send-message", async (data) => {
-//     const { receiverId, message } = data;
+  socket.on("send-message", async (data) => {
+    const { receiverId, message } = data;
 
-//     // Lưu tin nhắn vào cơ sở dữ liệu
-//     await models.message.create({
-//       message_id: uuidv4(),
-//       sender_id: userId,
-//       receiver_id: receiverId,
-//       message,
-//       timestamp: new Date(),
-//     });
+    const messageId = uuidv4();
+    if (userId && receiverId) {
+      await models.message.create({
+        message_id: messageId,
+        sender_id: userId,
+        receiver_id: receiverId,
+        message,
+        timestamp: new Date(),
+        isRead: false,
+      });
+    }
 
-//     const socketId = clients[receiverId];
-//     socketIo.emit("receive-message", { senderId: userId, message });
-//   });
+    socketIo.emit("receive-message", {
+      senderId: userId,
+      message,
+      message_id: messageId,
+      isRead: false,
+    });
 
-//   // socket.on("disconnect", () => {
-//   //   delete clients[userId];
-//   // });
-// });
+    socket.on("mark-message-read", async (message_id) => {
+      console.log("socket.on ~ message_id:", message_id);
+      await models.message.update(
+        { isRead: true },
+        { where: { message_id: message_id?.message_id } }
+      );
+    });
+  });
+});
 
 // using exception middleware
 app.use((err, req, res, next) => {

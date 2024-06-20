@@ -8,6 +8,7 @@ const {
   findByUserIdAndCourseId,
   findByCourseIdDone,
   findByUserIdDone,
+  updateExpiry,
 } = require("../controllers/booked-session.controller");
 const bookedSessionRoutes = express.Router();
 
@@ -21,6 +22,7 @@ bookedSessionRoutes.get("/count-course", findByCourseIdDone);
 bookedSessionRoutes.get("/:id", findById);
 bookedSessionRoutes.post("/", create);
 bookedSessionRoutes.put("/:id", update);
+bookedSessionRoutes.put("/expiry/:id", updateExpiry);
 bookedSessionRoutes.delete("/:id", deleteById);
 
 module.exports = bookedSessionRoutes;

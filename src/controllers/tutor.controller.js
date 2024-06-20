@@ -245,6 +245,49 @@ const getTutorByUserId = async (req, res) => {
   return succesCode(res, entity, "Success");
 };
 
+const findTutorProfileWithUser = async (req, res) => {
+  try {
+    let { id } = req.params;
+
+    let tutorProfile = await models.tutor_profile.findOne({
+      where: {
+        tutor_profile_id: id,
+      },
+      include: [
+        {
+          model: models.tutor_education,
+          as: "tutor_educations",
+        },
+      ],
+    });
+
+    if (!tutorProfile) {
+      return res.status(404).json({ message: "Tutor profile not found" });
+    }
+
+    let userId = tutorProfile.user_id;
+
+    let user = await models.users.findOne({
+      where: {
+        user_id: userId,
+      },
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    let result = {
+      ...tutorProfile.toJSON(),
+      user: user.toJSON(),
+    };
+
+    return succesCode(res, result, "Success");
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   findAll,
   findById,
@@ -255,4 +298,5 @@ module.exports = {
   updateTutorEducations,
   updateTutorExperience,
   getTutorByUserId,
+  findTutorProfileWithUser,
 };

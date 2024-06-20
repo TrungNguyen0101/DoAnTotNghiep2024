@@ -12,7 +12,8 @@ const config = {
   vnp_TmnCode: "SQPL0LV8",
   vnp_HashSecret: "LPTBSFYQTKLHTOFAKUCHYWKXBPCUZKLF",
   vnp_Url: "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html",
-  vnp_ReturnUrl: "http://localhost:3000/payment-result",
+  vnp_ReturnUrl: "https://do-an-tot-nghiep2024-fe.vercel.app/payment-result",
+  // vnp_ReturnUrl: "http://localhost:3000/payment-result",
 };
 var courseManage;
 var studentManage;
@@ -72,9 +73,10 @@ const getPaymentUrl = async (req, res) => {
       tutor_id: body.tutor_id,
       course_id: course?.dataValues?.course_id,
       price: course.dataValues.price,
+      is_expiry: "false",
       // checkout_session_id: null,
       data: course,
-      status: "PENDING",
+      status: "FAILED",
     });
   }
 
@@ -145,13 +147,13 @@ const getPaymentUrl = async (req, res) => {
   let signed = hmac.update(new Buffer(signData, "utf-8")).digest("hex");
   vnp_Params["vnp_SecureHash"] = signed;
   vnpUrl += "?" + querystring.stringify(vnp_Params, { encode: false });
+  console.log("getPaymentUrl ~ vnpUrl:", vnpUrl);
 
   return succesCode(res, vnpUrl);
 };
 
 const checkSumPayment = async (req, res) => {
   let vnp_Params = req.query;
-  console.log("checkSumPayment ~ vnp_Params:", vnp_Params);
 
   let secureHash = vnp_Params["vnp_SecureHash"];
 
@@ -177,6 +179,8 @@ const checkSumPayment = async (req, res) => {
       booked.update({
         booked_session_id,
         status: "DONE",
+        is_expiry: "true",
+        time: new Date().toISOString(),
       });
       await booked.save();
       var course_payment = await models.payment_transaction.create({
@@ -193,7 +197,7 @@ const checkSumPayment = async (req, res) => {
       if (TutorProfile) {
         const updatedBalance =
           parseFloat(TutorProfile.balance) +
-          parseFloat(vnp_Params["vnp_Amount"]) / 100;
+          parseFloat((vnp_Params["vnp_Amount"] / 100) * 0.7);
         await TutorProfile.update({ balance: updatedBalance });
       } else {
         console.log("Không tìm thấy hồ sơ giáo viên");

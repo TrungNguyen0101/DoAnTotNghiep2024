@@ -28,6 +28,10 @@ class message extends Sequelize.Model {
           type: DataTypes.DATE,
           defaultValue: DataTypes.NOW,
         },
+        isRead: {
+          type: DataTypes.BOOLEAN,
+          allowNull: true,
+        },
       },
       {
         sequelize,
