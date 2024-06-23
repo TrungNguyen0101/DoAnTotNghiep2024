@@ -6,7 +6,7 @@ const { Op } = require("sequelize");
 const { v4: uuidv4 } = require("uuid");
 
 const findAll = async (req, res) => {
-  let entities = await models.category.findAll({});
+  let entities = await models.category.findAll({ where: { is_delete: false } });
   return succesCode(res, entities, "Lấy danh sách loại khóa học thành công!!!");
 };
 
@@ -67,13 +67,11 @@ const update = async (req, res) => {
 
 const deleteById = async (req, res) => {
   let { id } = req.params;
-  let result = await models.category.destroy({
-    where: {
-      category_id: id,
-    },
-  });
+  let model = await models.category.findByPk(id);
+  model.update({ is_delete: true });
+  await model.save();
 
-  return result > 0 ? succesCode(res, true) : failCode(res, "Thất bại");
+  return succesCode(res, true);
 };
 
 module.exports = {

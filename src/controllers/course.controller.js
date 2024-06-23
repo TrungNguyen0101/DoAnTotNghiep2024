@@ -9,6 +9,9 @@ const moment = require("moment");
 
 const findAll = async (req, res) => {
   let entities = await models.course.findAll({
+    where: {
+      is_delete: false, // Add the condition here
+    },
     include: [
       {
         model: models.category,
@@ -19,7 +22,6 @@ const findAll = async (req, res) => {
         as: "tutor_profile",
         include: [
           { model: models.users, as: "user" },
-          // { model: models.tutor_certification, as: "tutor_certifications" },
           { model: models.tutor_education, as: "tutor_educations" },
         ], // Include the User model within TutorProfile
       },
@@ -38,6 +40,7 @@ const findAllbyTutor = async (req, res) => {
   let entities = await models.course.findAll({
     where: {
       tutor_profile_id: id,
+      is_delete: false, // Add the condition here
     },
     include: [
       {
@@ -142,14 +145,16 @@ const update = async (req, res) => {
 
 const deleteById = async (req, res) => {
   let { id } = req.params;
+  let model = await models.course.findByPk(id);
+  if (!model) {
+    return failCode(res, "model is not exists");
+  }
 
-  let result = await models.course.destroy({
-    where: {
-      course_id: id,
-    },
-  });
+  model.update({ is_delete: true });
+  await model.save();
 
-  return result > 0 ? succesCode(res, true) : failCode(res, "Thất bại");
+  // return result > 0 ? succesCode(res, true) : failCode(res, "Thất bại");
+  return succesCode(res, true);
 };
 
 // home page

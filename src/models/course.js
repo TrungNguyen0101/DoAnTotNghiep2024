@@ -32,10 +32,6 @@ class course extends Sequelize.Model {
           type: DataTypes.STRING(50),
           allowNull: true,
         },
-        // number_of_phase_required: {
-        //   type: DataTypes.STRING(50),
-        //   allowNull: true,
-        // },
         tutor_profile_id: {
           type: DataTypes.STRING(50),
           allowNull: true,
@@ -51,6 +47,11 @@ class course extends Sequelize.Model {
         type_course: {
           type: DataTypes.STRING(50),
           allowNull: true,
+        },
+        is_delete: {
+          type: DataTypes.BOOLEAN,
+          allowNull: true,
+          defaultValue: false,
         },
         category_id: {
           type: DataTypes.STRING(50),

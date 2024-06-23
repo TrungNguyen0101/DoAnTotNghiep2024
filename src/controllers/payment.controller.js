@@ -12,8 +12,8 @@ const config = {
   vnp_TmnCode: "SQPL0LV8",
   vnp_HashSecret: "LPTBSFYQTKLHTOFAKUCHYWKXBPCUZKLF",
   vnp_Url: "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html",
-  vnp_ReturnUrl: "https://do-an-tot-nghiep2024-fe.vercel.app/payment-result",
-  // vnp_ReturnUrl: "http://localhost:3000/payment-result",
+  // vnp_ReturnUrl: "https://do-an-tot-nghiep2024-fe.vercel.app/payment-result",
+  vnp_ReturnUrl: "http://localhost:3000/payment-result",
 };
 var courseManage;
 var studentManage;

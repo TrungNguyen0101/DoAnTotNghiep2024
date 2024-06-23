@@ -28,6 +28,11 @@ class category extends Sequelize.Model {
           type: DataTypes.STRING(50),
           allowNull: true,
         },
+        is_delete: {
+          type: DataTypes.BOOLEAN,
+          allowNull: true,
+          defaultValue: false,
+        },
       },
       {
         sequelize,
